@@ -27,7 +27,7 @@ endif
 SHELL=/bin/bash -o pipefail -o errexit
 
 # Use the 0.0 tag for testing, it shouldn't clobber any release builds
-TAG ?= 0.33.0
+TAG ?= 0.33.0-hc1
 
 # Use docker to run makefile tasks
 USE_DOCKER ?= true
@@ -59,9 +59,9 @@ ifeq ($(ARCH),)
     $(error mandatory variable ARCH is empty, either set it when calling the command or make sure 'go env GOARCH' works)
 endif
 
-REGISTRY ?= quay.io/kubernetes-ingress-controller
+REGISTRY ?= hzhq1255
 
-BASE_IMAGE ?= quay.io/kubernetes-ingress-controller/nginx:e3c49c52f4b74fe47ad65d6f3266a02e8b6b622f
+BASE_IMAGE ?= hzhq1255/nginx:base-1.20.1
 
 GOARCH=$(ARCH)
 
@@ -79,6 +79,8 @@ image: clean-image ## Build image for a particular arch.
 		--build-arg BASE_IMAGE="$(BASE_IMAGE)" \
 		--build-arg VERSION="$(TAG)" \
 		--build-arg TARGETARCH="$(ARCH)" \
+		--build-arg http_proxy=http://172.25.80.1:7890 \
+		--build-arg https_proxy=http://172.25.80.1:7890 \
 		-t $(REGISTRY)/nginx-ingress-controller:$(TAG) rootfs
 
 .PHONY: clean-image
@@ -251,7 +253,7 @@ endif
 show-version:
 	echo -n $(TAG)
 
-PLATFORMS ?= amd64 arm arm64 s390x
+PLATFORMS ?= amd64 arm64
 
 EMPTY :=
 SPACE := $(EMPTY) $(EMPTY)
@@ -270,4 +272,6 @@ release: init-docker-buildx clean
 		--platform $(subst $(SPACE),$(COMMA),$(PLATFORMS)) \
 		--build-arg BASE_IMAGE="$(BASE_IMAGE)" \
 		--build-arg VERSION="$(TAG)" \
+		--build-arg http_proxy=http://172.29.144.1:7890 \
+		--build-arg https_proxy=http://172.29.144.1:7890 \
 		-t $(REGISTRY)/nginx-ingress-controller:$(TAG) rootfs
