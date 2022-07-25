@@ -27,7 +27,7 @@ endif
 SHELL = /bin/bash
 
 # Use the 0.0 tag for testing, it shouldn't clobber any release builds
-TAG ?= master
+TAG ?= 0.27.1-hc1
 DOCKER ?= docker
 
 # Use docker to run makefile tasks
@@ -54,13 +54,13 @@ GIT_COMMIT ?= git-$(shell git rev-parse --short HEAD)
 
 PKG = k8s.io/ingress-nginx
 
-ALL_ARCH = amd64 arm arm64
+ALL_ARCH = amd64 arm64
 
 BUSTED_ARGS =-v --pattern=_test
 
-ARCH ?= $(shell go env GOARCH)
+ARCH ?= arm64
 
-REGISTRY ?= quay.io/kubernetes-ingress-controller
+REGISTRY ?= hzhq1255
 MULTI_ARCH_IMAGE = $(REGISTRY)/nginx-ingress-controller-${ARCH}
 
 GOHOSTOS ?= $(shell go env GOHOSTOS)
@@ -78,7 +78,7 @@ endif
 GO111MODULE=off
 
 # Set default base image dynamically for each arch
-BASEIMAGE?=quay.io/kubernetes-ingress-controller/nginx-$(ARCH):26f574dc279aa853736d7f7249965e90e47171d6
+BASEIMAGE?=hzhq1255/nginx:base-1.20.1
 
 TEMP_DIR := $(shell mktemp -d)
 DOCKERFILE := $(TEMP_DIR)/rootfs/Dockerfile
