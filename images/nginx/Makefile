@@ -58,20 +58,24 @@ all-push: $(addprefix sub-push-,$(ALL_ARCH))
 
 container: .container-$(ARCH)
 .container-$(ARCH):
-	cp -r ./rootfs/* $(TEMP_DIR)
-	cd $(TEMP_DIR) && $(SED_I) 's|BASEIMAGE|$(BASEIMAGE)|g' Dockerfile
-	cd $(TEMP_DIR) && $(SED_I) "s|ARCH|$(QEMUARCH)|g" Dockerfile
+	$(DOCKER) buildx build \
+     --platform linux/$(ARCH) \
+     --progress plain \
+     --no-cache -t $(MULTI_ARCH_IMG):$(TAG) $(TEMP_DIR)
+#	cp -r ./rootfs/* $(TEMP_DIR)
+#	cd $(TEMP_DIR) && $(SED_I) 's|BASEIMAGE|$(BASEIMAGE)|g' Dockerfile
+#	cd $(TEMP_DIR) && $(SED_I) "s|ARCH|$(QEMUARCH)|g" Dockerfile
 
-ifeq ($(ARCH),amd64)
-	# When building "normally" for amd64, remove the whole line, it has no part in the amd64 image
-	cd $(TEMP_DIR) && $(SED_I) "/CROSS_BUILD_/d" Dockerfile
-else
-	# When cross-building, only the placeholder "CROSS_BUILD_" should be removed
-	curl -sSL https://github.com/multiarch/qemu-user-static/releases/download/$(QEMUVERSION)/x86_64_qemu-$(QEMUARCH)-static.tar.gz | tar -xz -C $(TEMP_DIR)
-	cd $(TEMP_DIR) && $(SED_I) "s/CROSS_BUILD_//g" Dockerfile
-endif
+#ifeq ($(ARCH),amd64)
+#	# When building "normally" for amd64, remove the whole line, it has no part in the amd64 image
+#	cd $(TEMP_DIR) && $(SED_I) "/CROSS_BUILD_/d" Dockerfile
+#else
+#	# When cross-building, only the placeholder "CROSS_BUILD_" should be removed
+##	curl -sSL https://github.com/multiarch/qemu-user-static/releases/download/$(QEMUVERSION)/x86_64_qemu-$(QEMUARCH)-static.tar.gz | tar -xz -C $(TEMP_DIR)
+#	cd $(TEMP_DIR) && $(SED_I) "s/CROSS_BUILD_//g" Dockerfile
+#endif
 
-	$(DOCKER) build --no-cache -t $(MULTI_ARCH_IMG):$(TAG) $(TEMP_DIR)
+
 
 ifeq ($(ARCH), amd64)
 	# This is for to maintain the backward compatibility

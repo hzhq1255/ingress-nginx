@@ -19,7 +19,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-export NGINX_VERSION=1.15.10
+export NGINX_VERSION=1.20.1
 export NDK_VERSION=0.3.1rc1
 export SETMISC_VERSION=0.32
 export MORE_HEADERS_VERSION=0.33
@@ -53,8 +53,14 @@ get_src()
 
   echo "Downloading $url"
 
-  curl -sSL "$url" -o "$f"
-  echo "$hash  $f" | sha256sum -c - || exit 10
+  curl --retry 10 --retry-delay 5 --max-time 10  -sSL  "$url" -o "$f"
+#  if [[ $url !=~ $nginx ]]
+#  then
+#    echo "nginx-1.20.1"
+#  else
+#    echo "$hash  $f" | sha256sum -c - || exit 10
+#  fi
+
   tar xzf "$f"
   rm -rf "$f"
 }
@@ -123,8 +129,8 @@ function geoip2_get {
     && rm -rf $GEOIP_FOLDER/$1.tar.gz
 }
 
-geoip2_get "GeoLite2-City"     "http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
-geoip2_get "GeoLite2-ASN"      "http://geolite.maxmind.com/download/geoip/database/GeoLite2-ASN.tar.gz"
+geoip2_get "GeoLite2-City"     "https://dev.hzhq1255.work/GeoLite2-City_20220726.tar.gz"
+geoip2_get "GeoLite2-ASN"      "https://dev.hzhq1255.work/GeoLite2-ASN_20220726.tar.gz"
 
 mkdir --verbose -p "$BUILD_PATH"
 cd "$BUILD_PATH"

@@ -13,9 +13,17 @@
 # limitations under the License.
 
 
-FROM BASEIMAGE
+FROM quay.io/kubernetes-ingress-controller/nginx-ingress-controller-arm64:0.24.1 AS builder
 
-CROSS_BUILD_COPY qemu-ARCH-static /usr/bin/
+FROM quay.io/kubernetes-ingress-controller/debian-base-arm64:0.1
+
+
+RUN echo "deb http://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free\n \
+deb http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free\n \
+deb http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free\n \
+deb http://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free " > /etc/apt/sources.list
+
+COPY --from=builder /usr/bin /usr/bin/
 
 COPY . /
 
