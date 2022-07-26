@@ -30,7 +30,7 @@ function cleanup {
 }
 trap cleanup EXIT
 
-E2E_IMAGE=quay.io/kubernetes-ingress-controller/e2e:v05312020-d250b97b4
+E2E_IMAGE=k8s.gcr.io/ingress-nginx/e2e-test-runner:v20210601-g96a87c79b@sha256:f84dcddc84e5cba220260f315e18cd47fc8c6b7f3f4f57b7b3e9cc2ea25324b7
 
 DOCKER_OPTS=${DOCKER_OPTS:-}
 
@@ -39,7 +39,7 @@ KUBE_ROOT=$(cd $(dirname "${BASH_SOURCE}")/.. && pwd -P)
 FLAGS=$@
 
 PKG=k8s.io/ingress-nginx
-ARCH=$(go env GOARCH)
+ARCH=arm64
 
 MINIKUBE_PATH=${HOME}/.minikube
 MINIKUBE_VOLUME="-v ${MINIKUBE_PATH}:${MINIKUBE_PATH}"
@@ -49,7 +49,7 @@ if [ ! -d "${MINIKUBE_PATH}" ]; then
 fi
 
 # create output directory as current user to avoid problem with docker.
-mkdir -p "${KUBE_ROOT}/bin" "${KUBE_ROOT}/bin/${ARCH}"
+mkdir -p "${KUBE_ROOT}/bin" "${KUBE_ROOT}/bin/arm64"
 
 docker run                                            \
   --tty                                               \
@@ -59,7 +59,7 @@ docker run                                            \
   -e GO111MODULE=off                                  \
   -v "${HOME}/.kube:${HOME}/.kube"                    \
   -v "${KUBE_ROOT}:/go/src/${PKG}"                    \
-  -v "${KUBE_ROOT}/bin/${ARCH}:/go/bin/linux_${ARCH}" \
+  -v "${KUBE_ROOT}/bin/arm64:/go/bin/linux_arm64" \
   -v "/var/run/docker.sock:/var/run/docker.sock"      \
   -v "${INGRESS_VOLUME}:/etc/ingress-controller/"     \
   ${MINIKUBE_VOLUME}                                  \

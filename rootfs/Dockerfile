@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM --platform=$BUILDPLATFORM BASEIMAGE
+FROM --platform=arm64 BASEIMAGE
 
 LABEL org.opencontainers.image.title='NGINX Ingress Controller for Kubernetes'
 LABEL org.opencontainers.image.documentation='https://kubernetes.github.io/ingress-nginx/'

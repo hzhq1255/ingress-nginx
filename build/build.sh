@@ -45,7 +45,7 @@ fi
 
 export CGO_ENABLED=0
 
-go build \
+GOARM=7 GOARCH=arm64 go build \
   "${GOBUILD_FLAGS}" \
   -ldflags "-s -w \
     -X ${PKG}/version.RELEASE=${TAG} \
@@ -53,7 +53,7 @@ go build \
     -X ${PKG}/version.REPO=${REPO_INFO}" \
   -o "bin/${ARCH}/nginx-ingress-controller" "${PKG}/cmd/nginx"
 
-go build \
+GOARM=7 GOARCH=arm64 go build \
   "${GOBUILD_FLAGS}" \
   -ldflags "-s -w \
     -X ${PKG}/version.RELEASE=${TAG} \
@@ -62,7 +62,7 @@ go build \
   -o "bin/${ARCH}/dbg" "${PKG}/cmd/dbg"
 
 
-go build \
+GOARM=7 GOARCH=arm64 go build \
   "${GOBUILD_FLAGS}" \
   -ldflags "-s -w \
     -X ${PKG}/version.RELEASE=${TAG} \

@@ -54,7 +54,7 @@ GIT_COMMIT ?= git-$(shell git rev-parse --short HEAD)
 
 PKG = k8s.io/ingress-nginx
 
-ALL_ARCH = amd64 arm64
+ALL_ARCH = arm64
 
 BUSTED_ARGS =-v --pattern=_test
 
@@ -75,7 +75,7 @@ ifeq ($(GOHOSTOS),darwin)
 endif
 
 # use vendor directory instead of go modules https://github.com/golang/go/wiki/Modules
-GO111MODULE=off
+GO111MODULE=on
 
 # Set default base image dynamically for each arch
 BASEIMAGE?=hzhq1255/nginx:base-1.20.1
@@ -122,7 +122,7 @@ container: clean-container .container-$(ARCH) ## Build image for a particular ar
 		--no-cache \
 		--load \
 		--progress plain \
-		--platform linux/$(ARCH) \
+		--platform linux/arm64 \
 		-t $(MULTI_ARCH_IMAGE):$(TAG) $(TEMP_DIR)/rootfs
 
 .PHONY: clean-container
@@ -142,7 +142,7 @@ build: check-go-version ## Build ingress controller, debug tool and pre-stop hoo
 ifeq ($(USE_DOCKER), true)
 	@build/run-in-docker.sh \
 		PKG=$(PKG) \
-		ARCH=$(ARCH) \
+		ARCH=arm64 \
 		GIT_COMMIT=$(GIT_COMMIT) \
 		REPO_INFO=$(REPO_INFO) \
 		TAG=$(TAG) \
