@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM BASEIMAGE
+FROM hzhq1255/nginx:ingress-controller-0.24.1-base-1.20.1-amd64
 
-CROSS_BUILD_COPY qemu-QEMUARCH-static /usr/bin/
+#CROSS_BUILD_COPY qemu-QEMUARCH-static /usr/bin/
 
 WORKDIR  /etc/nginx
 

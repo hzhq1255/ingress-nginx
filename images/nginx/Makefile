@@ -100,3 +100,6 @@ sub-clean-%:
 
 release: all-container all-push
 	echo "done"
+
+
+#docker buildx build --platform=linux/arm64 --progress plain  --no-cache --build-arg https_proxy=http://host.docker.internal:7890 --build-arg http_proxy=http://host.docker.internal:7890 -t  nginx:0.24.1-base-1.20.1 .

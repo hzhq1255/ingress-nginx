@@ -48,7 +48,7 @@ FLAGS=$@
 
 tee .env << EOF
 PKG=${PKG:-""}
-ARCH=${ARCH:-""}
+ARCH=${GOARCH}
 GIT_COMMIT=${GIT_COMMIT:-""}
 TAG=${TAG:-"0.0"}
 HOME=${HOME:-/root}

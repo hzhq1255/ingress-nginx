@@ -13,9 +13,9 @@
 # limitations under the License.
 
 
-FROM quay.io/kubernetes-ingress-controller/nginx-ingress-controller-arm64:0.24.1 AS builder
+#FROM quay.io/kubernetes-ingress-controller/nginx-ingress-controller-arm64:0.24.1 AS builder
 
-FROM quay.io/kubernetes-ingress-controller/debian-base-arm64:0.1
+FROM quay.io/kubernetes-ingress-controller/debian-base-amd64:0.1
 
 
 RUN echo "deb http://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free\n \
@@ -23,7 +23,7 @@ deb http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-
 deb http://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free\n \
 deb http://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free " > /etc/apt/sources.list
 
-COPY --from=builder /usr/bin /usr/bin/
+#COPY --from=builder /usr/bin /usr/bin/
 
 COPY . /
 
